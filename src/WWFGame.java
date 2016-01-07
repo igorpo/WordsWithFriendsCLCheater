@@ -48,6 +48,27 @@ public class WWFGame {
 		}
 	}
 	
+	private static void findMatchingSuffixes(String suffix) {
+		HashMap<String, Integer> matches = new HashMap<String, Integer>();
+		int len = suffix.length();
+		for (String word : dict) {
+			boolean isMatch = true;
+			for (int i = word.length() - 1, j = len - 1; i >= word.length() - len && j >= 0; i--, j--) {
+				if (word.charAt(i) != suffix.charAt(j)) {
+					isMatch = false;
+					break;
+				}
+			}
+			if (isMatch) {
+				matches.put(word, wordScores.get(word));
+			}
+		}
+		Map<String, Integer> sortedMap = sortByValue(matches);
+		for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+			System.out.println(entry.getKey() + ": " + entry.getValue());
+		}
+	}
+	
 	private static Map<String, Integer> sortByValue(Map<String, Integer> unsortedMap) {
 		Map<String, Integer> sortedMap = new TreeMap<String, Integer>(new ValueComparator(unsortedMap));
 		sortedMap.putAll(unsortedMap);
@@ -82,7 +103,15 @@ public class WWFGame {
 			System.out.println("Invalid number of arguments, try again.");
 			System.exit(1);
 		}
-		String input = args[0].replaceAll("[^A-Za-z]", "").toUpperCase();
-		findPossibleWords(input);
+		
+		// find ending words
+		if (args[0].charAt(0) == '-') {
+			String suffix = args[0].replaceAll("[^A-Za-z]", "").toUpperCase();
+			findMatchingSuffixes(suffix);
+		} else {
+			String input = args[0].replaceAll("[^A-Za-z]", "").toUpperCase();
+			findPossibleWords(input);
+		}
+		
 	}
 }

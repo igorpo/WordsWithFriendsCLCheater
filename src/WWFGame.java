@@ -52,16 +52,19 @@ public class WWFGame {
 		HashMap<String, Integer> matches = new HashMap<String, Integer>();
 		int len = suffix.length();
 		for (String word : dict) {
-			boolean isMatch = true;
-			for (int i = word.length() - 1, j = len - 1; i >= word.length() - len && j >= 0; i--, j--) {
-				if (word.charAt(i) != suffix.charAt(j)) {
-					isMatch = false;
-					break;
+			if (word.length() >= len) {
+				boolean isMatch = true;
+				for (int i = word.length() - 1, j = len - 1; i >= word.length() - len && j >= 0; i--, j--) {
+					if (word.charAt(i) != suffix.charAt(j)) {
+						isMatch = false;
+						break;
+					}
+				}
+				if (isMatch) {
+					matches.put(word, wordScores.get(word));
 				}
 			}
-			if (isMatch) {
-				matches.put(word, wordScores.get(word));
-			}
+			
 		}
 		Map<String, Integer> sortedMap = sortByValue(matches);
 		for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {

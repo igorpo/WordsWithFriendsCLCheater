@@ -48,7 +48,14 @@ public class WWFGame {
 		}
 	}
 	
-	private static void findMatchingSuffixes(String suffix) {
+	private static void findMatchingSuffixes(String prefix, String suffix) {
+		ArrayList<Character> string = new ArrayList<Character>();
+		for (char c : prefix.toCharArray()) {
+			string.add(c);
+		}
+		for (char c : suffix.toCharArray()) {
+			string.add(c);
+		}
 		HashMap<String, Integer> matches = new HashMap<String, Integer>();
 		int len = suffix.length();
 		for (String word : dict) {
@@ -60,7 +67,7 @@ public class WWFGame {
 						break;
 					}
 				}
-				if (isMatch) {
+				if (isMatch && wordCanBeMade(word.toCharArray(), string)) {
 					matches.put(word, wordScores.get(word));
 				}
 			}
@@ -108,9 +115,12 @@ public class WWFGame {
 		}
 		
 		// find ending words
-		if (args[0].charAt(0) == '-') {
-			String suffix = args[0].replaceAll("[^A-Za-z]", "").toUpperCase();
-			findMatchingSuffixes(suffix);
+		// TODO: enable prefix/suffix end searching
+		// TODO: error check for multiple -,-,- c (can fix by making loop prompt)
+		if (args[0].contains("-")) {
+			String prefix = args[0].split("-")[0].replaceAll("[^A-Za-z]", "").toUpperCase();
+			String suffix = args[0].split("-")[1].replaceAll("[^A-Za-z]", "").toUpperCase();
+			findMatchingSuffixes(prefix, suffix);
 		} else {
 			String input = args[0].replaceAll("[^A-Za-z]", "").toUpperCase();
 			findPossibleWords(input);
